@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.silverspoon</groupId>
+    <artifactId>bulldog-parent</artifactId>
+    <version>0.3.0-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <artifactId>bulldog-linux-native</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+    <module>bulldog-linux-native-raspberrypi</module>
+    <!-- <module>bulldog-linux-native-cubieboard</module>
+    <module>bulldog-linux-native-beagleboneblack</module> -->
+  </modules>
+  <name>${project.groupId}:${project.artifactId}</name>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <compiler.exec>gcc</compiler.exec><!-- BEFORE: arm-linux-gnu-gcc  -->
+    <compiler.includes>-I${env.JAVA_HOME}/include -I${env.JAVA_HOME}/include/linux -I/usr/include</compiler.includes>
+    <linker.options>-shared --gc-sections</linker.options>
+    <linker.exec>ld</linker.exec> <!-- BEFORE: arm-linux-gnu-gcc-->
+  </properties>
+  <dependencies>
+    <dependency>
+      <groupId>io.silverspoon</groupId>
+      <artifactId>bulldog-linux</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+  <build>
+    <!-- Generate sources jar -->
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-source-plugin</artifactId>
+          <configuration>
+            <includes>
+              <include>**/*.c</include>
+              <include>**/*.h</include>
+            </includes>
+          </configuration>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <!-- Generate native header files -->
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>native-maven-plugin</artifactId>
+        <extensions>true</extensions>
+        <executions>
+          <execution>
+            <id>javah-linux</id>
+            <inherited>false</inherited>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>javah</goal>
+            </goals>
+            <configuration>
+              <javahClassNames>
+                <javahClassName>io.silverspoon.bulldog.linux.jni.NativeEpoll</javahClassName>
+                <javahClassName>io.silverspoon.bulldog.linux.jni.NativeI2c</javahClassName>
+                <javahClassName>io.silverspoon.bulldog.linux.jni.NativeMmap</javahClassName>
+                <javahClassName>io.silverspoon.bulldog.linux.jni.NativeSpi</javahClassName>
+                <javahClassName>io.silverspoon.bulldog.linux.jni.NativeSerial</javahClassName>
+                <javahClassName>io.silverspoon.bulldog.linux.jni.NativeTools</javahClassName>
+              </javahClassNames>
+              <javahVerbose>true</javahVerbose>
+              <javahOutputDirectory>src/main/c/linux/jni</javahOutputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
+  <profiles>
+    <profile>
+      <!-- enforces to use local c compiler instead of cross-compiler -->
+      <id>native-compile</id>
+      <properties>
+        <!-- we need version 4.8+ -->
+        <compiler.exec>gcc-4.8</compiler.exec>
+        <linker.exec>ld</linker.exec>
+      </properties>
+    </profile>
+  </profiles>
+</project>
