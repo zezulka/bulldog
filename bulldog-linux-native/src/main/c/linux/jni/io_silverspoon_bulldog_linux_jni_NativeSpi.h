@@ -33,14 +33,6 @@ JNIEXPORT void JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeSpi_spiClose
 
 /*
  * Class:     io_silverspoon_bulldog_linux_jni_NativeSpi
- * Method:    spiFinishTransfer
- * Signature: ()V
- */
-JNIEXPORT void JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeSpi_spiFinishTransfer
-  (JNIEnv *, jclass);
-
-/*
- * Class:     io_silverspoon_bulldog_linux_jni_NativeSpi
  * Method:    spiSelectSlave
  * Signature: (I)V
  */

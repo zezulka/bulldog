@@ -1,4 +1,4 @@
-  /*******************************************************************************
+/*******************************************************************************
  * Copyright (c) 2016 Silverspoon.io (silverspoon@silverware.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -59,7 +59,7 @@ public class LinuxDigitalInput extends AbstractDigitalInput implements LinuxEpol
    @Override
    public void removeInterruptListener(InterruptListener listener) {
       super.removeInterruptListener(listener);
-      if (getInterruptListeners().isEmpty()) {
+      if (getInterruptListeners().size() == 0) {
          interruptControl.stop();
       }
    }
@@ -70,14 +70,12 @@ public class LinuxDigitalInput extends AbstractDigitalInput implements LinuxEpol
       interruptControl.stop();
    }
 
-   @Override
    protected void enableInterruptsImpl() {
-      if (!getInterruptListeners().isEmpty() && !interruptControl.isRunning()) {
+      if (getInterruptListeners().size() > 0 && !interruptControl.isRunning()) {
          interruptControl.start();
       }
    }
 
-   @Override
    protected void disableInterruptsImpl() {
       interruptControl.teardown();
    }
