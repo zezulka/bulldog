@@ -101,7 +101,7 @@ int iolib_init(void)
 	PortIDSet_ptr[1]=(unsigned int*)p9_PortIDSet;
 
 	/* using memory mapped I/O */
-	memh=open("/dev/mem", O_RDWR);
+	memh=open("/dev/gpiomem", O_RDWR);
 
 	/* mapping Clock Module Peripheral Registers */
 	cm_per_addr = mmap(0, BBBIO_CM_PER_LEN, PROT_READ | PROT_WRITE, MAP_SHARED, memh, BBBIO_CM_PER_ADDR);

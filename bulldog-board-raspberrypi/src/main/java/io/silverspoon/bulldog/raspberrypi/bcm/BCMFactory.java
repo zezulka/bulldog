@@ -24,6 +24,8 @@ public class BCMFactory {
 
    public static final String BCM2708_NAME = "BCM2708";
    public static final String BCM2709_NAME = "BCM2709";
+   public static final String BCM2835_NAME = "BCM2835";
+   public static final String BCM2836_NAME = "BCM2836";
 
    private static AbstractBCM instance = null;
 
@@ -35,9 +37,9 @@ public class BCMFactory {
    public static AbstractBCM getBCM() {
       if (instance == null) {
          String name = CpuInfo.getHardware();
-         if (name.contains(BCM2708_NAME)) {
+         if (name.contains(BCM2708_NAME) || name.contains(BCM2835_NAME)) {
             instance = new BCM2835();
-         } else if (name.contains(BCM2709_NAME)) {
+         } else if (name.contains(BCM2709_NAME) || name.contains(BCM2836_NAME)) {
             instance = new BCM2836();
          } else {
             throw new IllegalArgumentException(name);
