@@ -931,9 +931,9 @@ int bcm2835_init(void)
     int memfd = -1;
     int ok = 0;
     // Open the master /dev/memory device
-    if ((memfd = open("/dev/gpiomem", O_RDWR | O_SYNC) ) < 0)
+    if ((memfd = open("/dev/mem", O_RDWR | O_SYNC) ) < 0)
     {
-	      fprintf(stderr, "bcm2835_init: Unable to open /dev/gpiomem: %s\n",
+	      fprintf(stderr, "bcm2835_init: Unable to open /dev/mem: %s\n",
 		    strerror(errno)) ;
 	      goto exit;
     }
