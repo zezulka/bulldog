@@ -36,7 +36,6 @@ void spiTransfer(unsigned char* txBuffer, unsigned char* rxBuffer, int transferL
     return;
   }
   bcm2835_spi_transfernb(txBuffer, rxBuffer, transferLength);
-  bcm2835_spi_end();
 }
 
 void spiClose() {

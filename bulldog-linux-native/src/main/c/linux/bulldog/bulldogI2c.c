@@ -25,7 +25,7 @@ unsigned char i2cReadBuf(char* buf, int len, int pos) {
   unsigned char internalRegister = (unsigned char) pos;
   bcm2835_i2c_write(&internalRegister, 1);
   unsigned char retVal =  bcm2835_i2c_read(buf, len);
-  bcm2835_i2c_end();
+  //bcm2835_i2c_end();
   return retVal;
 }
 
@@ -35,7 +35,7 @@ unsigned char i2cRead(int pos) {
    unsigned char internalRegister = (unsigned char) pos;
    bcm2835_i2c_write(&internalRegister, 1);
    bcm2835_i2c_read(&result, 1);
-   bcm2835_i2c_end();
+   //bcm2835_i2c_end();
    return result;
 }
 
@@ -47,7 +47,7 @@ unsigned char i2cWrite(int pos, unsigned char data) {
     *(buf + 1) = data;
     *(buf) = (unsigned char)pos;
     unsigned char retVal = bcm2835_i2c_write(buf, 2);
-    bcm2835_i2c_end();
+    //bcm2835_i2c_end();
     return retVal;
 }
 
@@ -58,7 +58,7 @@ unsigned char i2cWrite(int pos, unsigned char data) {
 unsigned char i2cWriteBufNoRange(char * buf, int len) {
     bcm2835_i2c_begin();
     unsigned char retVal =  bcm2835_i2c_write(buf, len);
-    bcm2835_i2c_end();
+    //bcm2835_i2c_end();
     return retVal;
 }
 
@@ -71,7 +71,7 @@ unsigned char i2cWriteBuf(char * buf, int len, int pos) {
     strcpy(ptr, buf);
     *(newBuf) = (unsigned char)pos;
     unsigned char retVal =  bcm2835_i2c_write(newBuf, len+1);
-    bcm2835_i2c_end();
+    //bcm2835_i2c_end();
     return retVal;
 }
 
