@@ -17,13 +17,9 @@ package io.silverspoon.bulldog.linux.jni;
 
 public class NativeI2c {
 
-   public static native byte i2cReadBuffer(byte[] buffer, int len, int pos);
+   public static native byte i2cRead(byte[] buffer, int len);
 
-   public static native byte i2cRead(int pos);
-
-   public static native byte i2cWrite(int pos, byte data);
-
-   public static native byte i2cWriteBuffer(byte[] buffer, int len, int pos);
+   public static native byte i2cWrite(byte[] buffer, int len);
 
    public static native void i2cSelectSlave(int slaveAddress);
 

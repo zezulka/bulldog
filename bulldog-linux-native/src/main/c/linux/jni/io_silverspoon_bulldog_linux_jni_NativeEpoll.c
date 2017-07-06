@@ -170,4 +170,3 @@ JNIEXPORT void JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeEpoll_shutdow
 		JNIEnv * env, jclass clazz, jint epollfd) {
 	close(epollfd);
 }
-

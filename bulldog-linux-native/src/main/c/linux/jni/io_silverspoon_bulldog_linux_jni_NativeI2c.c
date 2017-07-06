@@ -10,32 +10,12 @@
  * Method:    i2cRead
  * Signature: ([BII)B
  */
-JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cReadBuffer
-  (JNIEnv * env, jclass clazz, jbyteArray array, jint len, jint pos) {
+JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cRead
+  (JNIEnv * env, jclass clazz, jbyteArray array, jint len) {
     char* buf = (char *)(*env)->GetByteArrayElements(env, array, 0);
-    int retVal = i2cReadBuf(buf, (int)len, pos);
+    int retVal = i2cRead(buf, (int)len);
     (*env)->ReleaseByteArrayElements(env, array, buf, 0);
     return retVal;
-}
-
-/*
- * Class:     io_silverspoon_bulldog_linux_jni_NativeI2c
- * Method:    i2cReadByte
- * Signature: (I)B
- */
-JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cRead
-  (JNIEnv * env , jclass clazz, jint pos) {
-    return i2cRead(pos);
-}
-
-/*
- * Class:     io_silverspoon_bulldog_linux_jni_NativeI2c
- * Method:    i2cWrite
- * Signature: (IB)B
- */
-JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cWrite
-  (JNIEnv * env, jclass clazz, jint pos, jbyte data) {
-	  return i2cWrite(pos, data);
 }
 
 /*
@@ -43,10 +23,10 @@ JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cWrite
  * Method:    i2cWriteBuffer
  * Signature: ([BII)B
  */
-JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cWriteBuffer
-  (JNIEnv * env, jclass clazz, jbyteArray array, jint len, jint pos) {
+JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cWrite
+  (JNIEnv * env, jclass clazz, jbyteArray array, jint len) {
     char* buf = (char *)(*env)->GetByteArrayElements(env, array, 0);
-    int retVal = i2cWriteBuf(buf, (int)len, pos);
+    int retVal = i2cWrite(buf, (int)len);
     (*env)->ReleaseByteArrayElements(env, array, buf, 0);
     return retVal;
 }

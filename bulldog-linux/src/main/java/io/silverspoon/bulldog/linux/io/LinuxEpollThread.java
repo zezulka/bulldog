@@ -40,7 +40,13 @@ public class LinuxEpollThread implements Runnable {
    public void setup() {
       if (!isSetup) {
          epollFd = NativeEpoll.epollCreate();
+         if(epollFd < 0) {
+             throw new RuntimeException("epoll_create() failed and returned -1");
+         }
          fileDescriptor = NativeEpoll.addFile(epollFd, NativeEpoll.EPOLL_CTL_ADD, filename, NativeEpoll.EPOLLPRI | NativeEpoll.EPOLLIN | NativeEpoll.EPOLLET);
+         if(fileDescriptor < 0) {
+             throw new RuntimeException("open_wait() failed and returned -1");
+         }
          isSetup = true;
       }
    }

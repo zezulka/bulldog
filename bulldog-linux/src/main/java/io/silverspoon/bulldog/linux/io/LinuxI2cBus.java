@@ -19,10 +19,10 @@ import io.silverspoon.bulldog.core.io.bus.BusConnection;
 import io.silverspoon.bulldog.core.io.bus.i2c.I2cBus;
 import io.silverspoon.bulldog.core.io.bus.i2c.I2cConnection;
 import io.silverspoon.bulldog.core.pin.Pin;
-import io.silverspoon.bulldog.core.util.BulldogUtil;
 import io.silverspoon.bulldog.linux.jni.NativeI2c;
 
 import java.io.IOException;
+
 public class LinuxI2cBus extends AbstractLinuxBus implements I2cBus {
 
     private int selectedSlaveAddress;
@@ -85,26 +85,26 @@ public class LinuxI2cBus extends AbstractLinuxBus implements I2cBus {
 
     @Override
     public int readBytes(byte[] buffer) throws IOException {
-        return readBytes(buffer, buffer.length);
-    }
-
-    public int readBytes(byte[] buffer, int len) {
-        return NativeI2c.i2cReadBuffer(buffer, len, 0);
+        return NativeI2c.i2cRead(buffer, buffer.length);
     }
 
     @Override
     public String readString() throws IOException {
-        throw new UnsupportedOperationException("Not supported in this implementation yet");
+        throw new UnsupportedOperationException("Not supported in this implementation");
     }
 
     @Override
     public byte readByteFromRegister(int register) throws IOException {
-        return NativeI2c.i2cRead(register);
+        NativeI2c.i2cWrite(new byte[]{(byte) register}, 1);
+        byte[] oneByte = new byte[]{0};
+        NativeI2c.i2cRead(oneByte, 1);
+        return oneByte[0];
     }
 
     @Override
     public int readBytesFromRegister(int register, byte[] buffer) throws IOException {
-         return NativeI2c.i2cReadBuffer(buffer, buffer.length, register);
+        NativeI2c.i2cWrite(new byte[]{(byte) register}, 1);
+        return NativeI2c.i2cRead(buffer, buffer.length);
     }
 
     @Override
@@ -119,7 +119,7 @@ public class LinuxI2cBus extends AbstractLinuxBus implements I2cBus {
 
     @Override
     public void writeByte(int b) throws IOException {
-        int returnValue = NativeI2c.i2cWrite(0x00, (byte) b);
+        int returnValue = NativeI2c.i2cWrite(new byte[]{(byte) b}, 1);
         if (returnValue < 0) {
             throw new IOException(ERROR_WRITING_BYTE);
         }
@@ -127,10 +127,10 @@ public class LinuxI2cBus extends AbstractLinuxBus implements I2cBus {
 
     @Override
     public void writeBytes(byte[] bytes) throws IOException {
-      int returnValue = NativeI2c.i2cWriteBuffer(bytes, bytes.length, 0);
-      if (returnValue < 0) {
-          throw new IOException(ERROR_WRITING_BYTE);
-      }
+        int returnValue = NativeI2c.i2cWrite(bytes, bytes.length);
+        if (returnValue < 0) {
+            throw new IOException(ERROR_WRITING_BYTE);
+        }
     }
 
     @Override
@@ -140,12 +140,15 @@ public class LinuxI2cBus extends AbstractLinuxBus implements I2cBus {
 
     @Override
     public void writeByteToRegister(int register, int data) throws IOException {
-        NativeI2c.i2cWrite(register, (byte)data);
+        NativeI2c.i2cWrite(new byte[]{(byte) register, (byte) data}, 2);
     }
 
     @Override
     public void writeBytesToRegister(int register, byte[] data) throws IOException {
-        NativeI2c.i2cWriteBuffer(data, data.length, register);
+        byte[] bytesToWrite = new byte[data.length + 1];
+        bytesToWrite[0] = (byte) register;
+        System.arraycopy(data, 0, bytesToWrite, 1, data.length);
+        NativeI2c.i2cWrite(bytesToWrite, data.length);
     }
 
     @Override
