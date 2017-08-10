@@ -16,15 +16,13 @@
 package io.silverspoon.bulldog.raspberrypi.gpio;
 
 import io.silverspoon.bulldog.core.Signal;
-import io.silverspoon.bulldog.core.gpio.base.AbstractDigitalInput;
 import io.silverspoon.bulldog.core.pin.Pin;
 import io.silverspoon.bulldog.linux.gpio.LinuxDigitalInput;
 import io.silverspoon.bulldog.raspberrypi.RaspberryPiPin;
 import io.silverspoon.bulldog.raspberrypi.bcm.AbstractBCM;
 import io.silverspoon.bulldog.raspberrypi.bcm.BCMFactory;
-import io.silverspoon.bulldog.linux.io.LinuxEpollListener;
 
-public class RaspiDigitalInput extends LinuxDigitalInput implements LinuxEpollListener {
+public class RaspiDigitalInput extends LinuxDigitalInput {
 
    public static final AbstractBCM BCM = BCMFactory.getBCM();
 
