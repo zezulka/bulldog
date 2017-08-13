@@ -28,6 +28,6 @@ public class NativeTools {
    public static native int open(String filename, int flags);
 
    public static native int close(int fileDescriptor);
-   public static native void init();
+   public static native void init(int periBase);
 
 }

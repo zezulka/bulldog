@@ -1,7 +1,7 @@
 #include <stdarg.h>
 #include <stdio.h>
 #include "bulldog.h"
-#include "bcm2835.h"
+#include "bcm.h"
 
 void errorMessage(char* messageFormat, ...) {
 	va_list args;

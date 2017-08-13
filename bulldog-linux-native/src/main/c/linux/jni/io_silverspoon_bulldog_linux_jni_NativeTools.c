@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "io_silverspoon_bulldog_linux_jni_NativeTools.h"
-#include "../bulldog/bcm2835.h"
+#include "../bulldog/bcm.h"
 
 
 /*
@@ -70,10 +70,10 @@ JNIEXPORT jint JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeTools_close
 
 /*
  * Class:     io_silverspoon_bulldog_linux_jni_NativeTools
- * Method:    close
- * Signature: ()V
+ * Method:    init
+ * Signature: (I)V
  */
 JNIEXPORT void JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeTools_init
-(JNIEnv * env, jclass clazz) {
-	bcm2835_init();
+(JNIEnv * env, jclass clazz, jint periBase) {
+	bcm_init(periBase);
 }

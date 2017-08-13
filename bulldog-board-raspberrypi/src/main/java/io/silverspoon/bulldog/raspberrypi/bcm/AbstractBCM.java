@@ -29,7 +29,7 @@ public abstract class AbstractBCM {
    private MemoryMap clockMemory;
 
    public AbstractBCM() {
-         NativeTools.init();
+         NativeTools.init(getBCMPeriBase());
    }
 
    public abstract int getBCMPeriBase();
