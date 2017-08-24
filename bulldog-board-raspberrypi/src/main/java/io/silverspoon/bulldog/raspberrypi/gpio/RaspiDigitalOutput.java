@@ -1,4 +1,4 @@
-/*******************************************************************************
+/** *****************************************************************************
  * Copyright (c) 2016 Silverspoon.io (silverspoon@silverware.io)
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -12,7 +12,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *******************************************************************************/
+ ****************************************************************************** */
 package io.silverspoon.bulldog.raspberrypi.gpio;
 
 import io.silverspoon.bulldog.core.Signal;
@@ -24,34 +24,31 @@ import io.silverspoon.bulldog.raspberrypi.bcm.AbstractBCM;
 import io.silverspoon.bulldog.raspberrypi.bcm.BCMFactory;
 
 public class RaspiDigitalOutput extends AbstractDigitalOutput {
-    
-   public static final AbstractBCM BCM = BCMFactory.getBCM();
-   public RaspiDigitalOutput(Pin pin) {
-      super(pin);
-   }
 
-   @Override
-   protected void setupImpl() {
-      RaspberryPiPin pin = (RaspberryPiPin) getPin();
-      BCM.configureAsInput(pin.getGpioNumber());
-      BCM.configureAsOutput(pin.getGpioNumber());
-      int address = 1 << pin.getGpioNumber();
-      Signal s = Signal.fromNumericValue(BCM.getGpioMemory().getIntValueAt(BCM.getGPIORead()) & address);
-      setSignal(s);
-   }
+    public static final AbstractBCM BCM = BCMFactory.getBCM();
 
-   @Override
-   protected void teardownImpl() {
+    public RaspiDigitalOutput(Pin pin) {
+        super(pin);
+    }
 
-   }
+    /**
+     * Setup is done in native library, therefore this is noop.
+     */
+    @Override
+    protected void setupImpl() {
+    }
 
-   @Override
-   protected void applySignalImpl(Signal signal) {
-        NativeGpio.writeSignal(signal.getNumericValue(), getRaspberryPiPin().getGpioNumber());   
-   }
+    @Override
+    protected void teardownImpl() {
 
-   private RaspberryPiPin getRaspberryPiPin() {
-      RaspberryPiPin pin = (RaspberryPiPin) getPin();
-      return pin;
-   }
+    }
+
+    @Override
+    protected void applySignalImpl(Signal signal) {
+        NativeGpio.writeSignal(signal.getNumericValue(), getRaspberryPiPin().getGpioNumber());
+    }
+
+    private RaspberryPiPin getRaspberryPiPin() {
+        return (RaspberryPiPin) getPin();
+    }
 }

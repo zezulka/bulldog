@@ -54,7 +54,7 @@ public class DigitalIOFeature extends AbstractPinFeature implements DigitalIO {
       }
    }
 
-   private void setupOutputIfNecessary() {
+    private void setupOutputIfNecessary() {
       if (!output.isSetup()) {
          if (input.isSetup()) {
             input.teardown();
@@ -149,13 +149,11 @@ public class DigitalIOFeature extends AbstractPinFeature implements DigitalIO {
 
    @Override
    public void write(Signal signal) {
-      setupOutputIfNecessary();
       output.write(signal);
    }
 
    @Override
    public void applySignal(Signal signal) {
-      setupOutputIfNecessary();
       output.applySignal(signal);
    }
 

@@ -61,10 +61,8 @@ public final class InterruptEventArgs {
 
     @Override
     public String toString() {
-        return "InterruptEventArgs{" + "edge=" + edge + ", pin=" + pin.getName() + '}';
+        return "InterruptEventArgs{"
+                + "edge=" + edge
+                + ", pin=" + pin.getName() + '}';
     }
-
-
-
-
 }
