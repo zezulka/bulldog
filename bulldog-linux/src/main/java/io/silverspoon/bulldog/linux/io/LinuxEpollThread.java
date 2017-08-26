@@ -22,7 +22,7 @@ import io.silverspoon.bulldog.linux.jni.NativePollResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinuxEpollThread implements Runnable {
+public class LinuxEpollThread implements SysfsFileChangeSubject {
 
    private Thread listenerThread = new Thread(this);
    private boolean running = false;
@@ -37,6 +37,7 @@ public class LinuxEpollThread implements Runnable {
       this.filename = filename;
    }
 
+   @Override
    public void setup() {
       if (!isSetup) {
          epollFd = NativeEpoll.epollCreate();
@@ -51,6 +52,7 @@ public class LinuxEpollThread implements Runnable {
       }
    }
 
+   @Override
    public void start() {
       if (running) {
          return;
@@ -64,6 +66,7 @@ public class LinuxEpollThread implements Runnable {
       running = true;
    }
 
+   @Override
    public void stop() {
       if (!running) {
          return;
@@ -77,6 +80,7 @@ public class LinuxEpollThread implements Runnable {
       }
    }
 
+   @Override
    public void run() {
       while (running) {
          NativePollResult[] results = NativeEpoll.waitForInterrupt(epollFd);
@@ -87,6 +91,7 @@ public class LinuxEpollThread implements Runnable {
       }
    }
 
+   @Override
    public void teardown() {
       stop();
       if (isSetup) {
@@ -96,18 +101,22 @@ public class LinuxEpollThread implements Runnable {
       isSetup = false;
    }
 
+   @Override
    public boolean isRunning() {
       return listenerThread.isAlive();
    }
 
+   @Override
    public void addListener(LinuxEpollListener listener) {
       this.listeners.add(listener);
    }
 
+   @Override
    public void removeListener(LinuxEpollListener listener) {
       this.listeners.remove(listener);
    }
 
+   @Override
    public void clearListeners() {
       this.listeners.clear();
    }
