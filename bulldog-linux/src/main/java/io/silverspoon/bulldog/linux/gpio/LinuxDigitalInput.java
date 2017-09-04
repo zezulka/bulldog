@@ -23,13 +23,12 @@ import io.silverspoon.bulldog.core.gpio.base.AbstractDigitalInput;
 import io.silverspoon.bulldog.core.pin.Pin;
 import io.silverspoon.bulldog.linux.io.LinuxEpollListener;
 import io.silverspoon.bulldog.linux.io.LinuxEpollThread;
-import io.silverspoon.bulldog.linux.io.SysfsFileChangeSubject;
 import io.silverspoon.bulldog.linux.jni.NativePollResult;
 import io.silverspoon.bulldog.linux.sysfs.SysFsPin;
 
 public class LinuxDigitalInput extends AbstractDigitalInput implements LinuxEpollListener {
 
-    private SysfsFileChangeSubject interruptControl;
+    private LinuxEpollThread interruptControl;
     private final SysFsPin sysFsPin;
     private Edge lastEdge;
     private volatile long lastInterruptTime;
@@ -37,14 +36,7 @@ public class LinuxDigitalInput extends AbstractDigitalInput implements LinuxEpol
     public LinuxDigitalInput(Pin pin) {
         super(pin);
         sysFsPin = createSysFsPin(getPin());
-      interruptControl = new LinuxEpollThread(sysFsPin.getValueFilePath().toString());
-        interruptControl.addListener(this);
-    }
-
-    public LinuxDigitalInput(Pin pin, SysfsFileChangeSubject interruptControl) {
-        super(pin);
-        sysFsPin = createSysFsPin(getPin());
-        this.interruptControl = interruptControl;
+        interruptControl = new LinuxEpollThread(sysFsPin.getValueFilePath().toString());
         interruptControl.addListener(this);
     }
 

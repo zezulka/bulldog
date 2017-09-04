@@ -22,7 +22,7 @@ import io.silverspoon.bulldog.linux.jni.NativePollResult;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LinuxEpollThread implements SysfsFileChangeSubject {
+public class LinuxEpollThread implements Runnable {
 
    private Thread listenerThread = new Thread(this);
    private boolean running = false;
@@ -37,22 +37,14 @@ public class LinuxEpollThread implements SysfsFileChangeSubject {
       this.filename = filename;
    }
 
-   @Override
    public void setup() {
       if (!isSetup) {
          epollFd = NativeEpoll.epollCreate();
-         if(epollFd < 0) {
-             throw new RuntimeException("epoll_create() failed and returned -1");
-         }
          fileDescriptor = NativeEpoll.addFile(epollFd, NativeEpoll.EPOLL_CTL_ADD, filename, NativeEpoll.EPOLLPRI | NativeEpoll.EPOLLIN | NativeEpoll.EPOLLET);
-         if(fileDescriptor < 0) {
-             throw new RuntimeException("open_wait() failed and returned -1");
-         }
          isSetup = true;
       }
    }
 
-   @Override
    public void start() {
       if (running) {
          return;
@@ -66,7 +58,6 @@ public class LinuxEpollThread implements SysfsFileChangeSubject {
       running = true;
    }
 
-   @Override
    public void stop() {
       if (!running) {
          return;
@@ -91,7 +82,6 @@ public class LinuxEpollThread implements SysfsFileChangeSubject {
       }
    }
 
-   @Override
    public void teardown() {
       stop();
       if (isSetup) {
@@ -101,22 +91,18 @@ public class LinuxEpollThread implements SysfsFileChangeSubject {
       isSetup = false;
    }
 
-   @Override
    public boolean isRunning() {
       return listenerThread.isAlive();
    }
 
-   @Override
    public void addListener(LinuxEpollListener listener) {
       this.listeners.add(listener);
    }
 
-   @Override
    public void removeListener(LinuxEpollListener listener) {
       this.listeners.remove(listener);
    }
 
-   @Override
    public void clearListeners() {
       this.listeners.clear();
    }

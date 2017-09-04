@@ -40,9 +40,9 @@ JNIEXPORT jint JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeTools_close
 /*
  * Class:     io_silverspoon_bulldog_linux_jni_NativeTools
  * Method:    init
- * Signature: (I)V
+ * Signature: (I)I
  */
-JNIEXPORT void JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeTools_init
+JNIEXPORT jint JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeTools_init
   (JNIEnv *, jclass, jint);
 
 #ifdef __cplusplus

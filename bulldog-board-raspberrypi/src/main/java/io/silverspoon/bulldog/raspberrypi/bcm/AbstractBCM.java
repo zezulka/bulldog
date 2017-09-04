@@ -29,7 +29,10 @@ public abstract class AbstractBCM {
    private MemoryMap clockMemory;
 
    public AbstractBCM() {
-         NativeTools.init(getBCMPeriBase());
+        boolean success = NativeTools.init(getBCMPeriBase()) == 1;
+        if(!success) {
+            throw new RuntimeException("Unable to initialize native library.");
+        }
    }
 
    public abstract int getBCMPeriBase();

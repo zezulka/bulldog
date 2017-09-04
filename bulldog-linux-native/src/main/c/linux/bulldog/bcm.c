@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <sys/types.h>
 #include <string.h>
 #include <time.h>
 #include <unistd.h>
@@ -955,13 +956,31 @@ int bcm_init(uint32_t peri_base)
     }
     int memfd = -1;
     int ok = 0;
-    // Open the master /dev/memory device
-    if ((memfd = open("/dev/mem", O_RDWR | O_SYNC) ) < 0)
-    {
-	      fprintf(stderr, "bcm_init: Unable to open /dev/mem: %s\n",
-		    strerror(errno)) ;
-	      goto exit;
-    }
+
+
+    if(getuid() == 0) {
+             // Open the master /dev/memory device
+             if ((memfd = open("/dev/mem", O_RDWR | O_SYNC) ) < 0)
+             {
+                    fprintf(stderr, "bcm_init: Unable to open /dev/mem: %s\n",
+                        strerror(errno)) ;
+                    goto exit;
+             }
+    } else {
+             // Enables library to use GPIO interface without root permissions
+             if((memfd = open("/dev/gpiomem", O_RDWR | O_SYNC)) < 0)
+             {
+                 fprintf(stderr, "bcm_init: Unable to open /dev/gpiomem: %s\n",
+                        strerror(errno)) ;
+                 goto exit;          
+             }
+             // GPIO:
+             bcm_gpio = mapmem("gpio", BCM_BLOCK_SIZE, memfd, BCM_GPIO_BASE);
+             if (bcm_gpio == MAP_FAILED) goto exit;
+             ok = 1;
+             // We have to skip other memory mappings as they would be useless
+             goto exit;
+    }   
 
     // GPIO:
     bcm_gpio = mapmem("gpio", BCM_BLOCK_SIZE, memfd, BCM_GPIO_BASE);
