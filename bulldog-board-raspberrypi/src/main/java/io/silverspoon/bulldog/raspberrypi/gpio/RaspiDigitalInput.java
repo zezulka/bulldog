@@ -49,7 +49,6 @@ public class RaspiDigitalInput extends LinuxDigitalInput {
    }
 
    private RaspberryPiPin getRaspiPin() {
-      RaspberryPiPin pin = (RaspberryPiPin) getPin();
-      return pin;
+      return (RaspberryPiPin) getPin();
    }
 }
