@@ -1,0 +1,29 @@
+language: java
+
+before_install: "git clone -b travis `git config --get remote.origin.url` target/travis"
+
+install: 
+  - sudo add-apt-repository "deb http://archive.ubuntu.com/ubuntu trusty main universe"
+  - sudo apt-get update -q
+  - sudo apt-get install -y gcc-4.8-arm-linux-gnueabihf 
+
+script: "
+if [ ${TRAVIS_PULL_REQUEST} = 'false' ];
+then
+    mvn clean deploy --settings target/travis/settings.xml -Dcompiler.exec=arm-linux-gnueabihf-gcc-4.8 -Dlinker.exec=arm-linux-gnueabihf-ld;  
+else
+    mvn clean verify --settings target/travis/settings.xml -Dcompiler.exec=arm-linux-gnueabihf-gcc-4.8 -Dlinker.exec=arm-linux-gnueabihf-ld;
+fi"
+
+
+jdk:
+  - oraclejdk8
+
+notifications:
+  email:
+    - zezulka95@gmail.com
+
+branches:
+  only:
+    - master
+    - devel
