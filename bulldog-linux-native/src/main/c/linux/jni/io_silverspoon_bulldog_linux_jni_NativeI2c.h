@@ -9,35 +9,19 @@ extern "C" {
 #endif
 /*
  * Class:     io_silverspoon_bulldog_linux_jni_NativeI2c
- * Method:    i2cReadBuffer
- * Signature: ([BII)B
- */
-JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cReadBuffer
-  (JNIEnv *, jclass, jbyteArray, jint, jint);
-
-/*
- * Class:     io_silverspoon_bulldog_linux_jni_NativeI2c
  * Method:    i2cRead
- * Signature: (I)B
+ * Signature: ([BI)B
  */
 JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cRead
-  (JNIEnv *, jclass, jint);
+  (JNIEnv *, jclass, jbyteArray, jint);
 
 /*
  * Class:     io_silverspoon_bulldog_linux_jni_NativeI2c
  * Method:    i2cWrite
- * Signature: (IB)B
+ * Signature: ([BI)B
  */
 JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cWrite
-  (JNIEnv *, jclass, jint, jbyte);
-
-/*
- * Class:     io_silverspoon_bulldog_linux_jni_NativeI2c
- * Method:    i2cWriteBuffer
- * Signature: ([BII)B
- */
-JNIEXPORT jbyte JNICALL Java_io_silverspoon_bulldog_linux_jni_NativeI2c_i2cWriteBuffer
-  (JNIEnv *, jclass, jbyteArray, jint, jint);
+  (JNIEnv *, jclass, jbyteArray, jint);
 
 /*
  * Class:     io_silverspoon_bulldog_linux_jni_NativeI2c

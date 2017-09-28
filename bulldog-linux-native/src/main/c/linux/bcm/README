@@ -1,0 +1,2 @@
+C library is based on bcm2835 library available online (for more information, please read header file of this library, i.e. bcm2835.h)
+files with prefix bulldog are only wrappers to this library and make it easy for JNI files to call the bcm2835 functionality.

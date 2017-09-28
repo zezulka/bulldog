@@ -530,27 +530,32 @@ void bcm_spi_transfernb(char* tbuf, char* rbuf, uint32_t len)
     // Set TA = 1
     bcm_peri_set_bits(paddr, BCM_SPI0_CS_TA, BCM_SPI0_CS_TA);
 
+    printf("[bcm-c-lib] SPI transfer started.\n");
+    
     uint32_t i;
     for (i = 0; i < len; i++)
     {
+        printf("[bcm-c-lib] pre TXD.\n");
 	// Maybe wait for TXD
 	while (!(bcm_peri_read(paddr) & BCM_SPI0_CS_TXD))
-	    delayMicroseconds(10);
-
+            delayMicroseconds(10);
+	printf("[bcm-c-lib] post TXD.\n");    
 	// Write to FIFO, no barrier
 	bcm_peri_write_nb(fifo, tbuf[i]);
 
+        printf("[bcm-c-lib] pre RXD.\n");
 	// Wait for RXD
 	while (!(bcm_peri_read(paddr) & BCM_SPI0_CS_RXD))
-	    delayMicroseconds(10);
-
+            delayMicroseconds(10);
+	printf("[bcm-c-lib] post RXD.\n");    
 	// then read the data byte
 	rbuf[i] = bcm_peri_read_nb(fifo);
     }
     // Wait for DONE to be set
     while (!(bcm_peri_read_nb(paddr) & BCM_SPI0_CS_DONE))
-	delayMicroseconds(10);
-
+        delayMicroseconds(10);
+    
+    printf("[bcm-c-lib] SPI transfer finished.\n");
     // Set TA = 0, and also set the barrier
     bcm_peri_set_bits(paddr, 0, BCM_SPI0_CS_TA);
 }
@@ -941,7 +946,7 @@ void init_constants(uint32_t peri_base) {
 // Initialise this library.
 int bcm_init(uint32_t peri_base)
 {
-  init_constants(peri_base);
+    init_constants(peri_base);
     if (debug)
     {
 	bcm_pads = (uint32_t*)BCM_GPIO_PADS;
@@ -982,6 +987,7 @@ int bcm_init(uint32_t peri_base)
              goto exit;
     }   
 
+    peripherals = mapmem("gpio", BCM_BLOCK_SIZE, memfd, (uint32_t)peri_base);
     // GPIO:
     bcm_gpio = mapmem("gpio", BCM_BLOCK_SIZE, memfd, BCM_GPIO_BASE);
     if (bcm_gpio == MAP_FAILED) goto exit;

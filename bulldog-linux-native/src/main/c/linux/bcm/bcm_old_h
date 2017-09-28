@@ -17,25 +17,24 @@
 /// Speed of the core clock core_clk
 #define BCM_CORE_CLK_HZ				250000000	///< 250 MHz
 
-// Physical addresses for various peripheral register sets
-/// Base Physical Address of the BCM peripheral registers
-extern uint32_t BCM_PERI_BASE;
-/// Base Physical Address of the System Timer registers
-extern uint32_t BCM_ST_BASE;
-/// Base Physical Address of the Pads registers
-extern uint32_t BCM_GPIO_PADS;
-/// Base Physical Address of the Clock/timer registers
-extern uint32_t BCM_CLOCK_BASE;
-/// Base Physical Address of the GPIO registers
-extern uint32_t BCM_GPIO_BASE;
-/// Base Physical Address of the SPI0 registers
-extern uint32_t BCM_SPI0_BASE;
-/// Base Physical Address of the BSC0 registers
-extern uint32_t BCM_BSC0_BASE;
-/// Base Physical Address of the PWM registers
-extern uint32_t BCM_GPIO_PWM;
- /// Base Physical Address of the BSC1 registers
-extern uint32_t BCM_BSC1_BASE;
+/*! Offsets for the bases of various peripherals within the peripherals block
+  /   Base Address of the System Timer registers
+*/
+#define BCM2835_ST_BASE			0x3000
+/*! Base Address of the Pads registers */
+#define BCM2835_GPIO_PADS               0x100000
+/*! Base Address of the Clock/timer registers */
+#define BCM2835_CLOCK_BASE              0x101000
+/*! Base Address of the GPIO registers */
+#define BCM2835_GPIO_BASE               0x200000
+/*! Base Address of the SPI0 registers */
+#define BCM2835_SPI0_BASE               0x204000
+/*! Base Address of the BSC0 registers */
+#define BCM2835_BSC0_BASE 		0x205000
+/*! Base Address of the PWM registers */
+#define BCM2835_GPIO_PWM                0x20C000
+/*! Base Address of the BSC1 registers */
+#define BCM2835_BSC1_BASE		0x804000
 
 
 /// Base of the ST (System Timer) registers.

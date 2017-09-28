@@ -3,7 +3,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include "io_silverspoon_bulldog_linux_jni_NativeSpi.h"
-#include "../bulldog/bulldogSpi.h"
+#include "../bcm/bulldogSpi.h"
 
 /*
  * Class:     io_silverspoon_bulldog_linux_jni_NativeSpi

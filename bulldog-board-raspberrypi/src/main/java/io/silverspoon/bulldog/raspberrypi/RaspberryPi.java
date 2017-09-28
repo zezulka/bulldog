@@ -18,14 +18,13 @@ package io.silverspoon.bulldog.raspberrypi;
 import io.silverspoon.bulldog.core.gpio.base.DigitalIOFeature;
 import io.silverspoon.bulldog.core.pin.Pin;
 import io.silverspoon.bulldog.core.platform.AbstractBoard;
-import io.silverspoon.bulldog.linux.io.LinuxSpiBus;
 import io.silverspoon.bulldog.linux.sysinfo.CpuInfo;
 import io.silverspoon.bulldog.raspberrypi.bcm.AbstractBCM;
 import io.silverspoon.bulldog.raspberrypi.bcm.BCMFactory;
-import io.silverspoon.bulldog.core.gpio.DigitalOutput;
 import io.silverspoon.bulldog.raspberrypi.gpio.RaspiDigitalInput;
 import io.silverspoon.bulldog.raspberrypi.gpio.RaspiDigitalOutput;
 import io.silverspoon.bulldog.raspberrypi.io.RaspberryPiI2cBus;
+import io.silverspoon.bulldog.raspberrypi.io.RaspberryPiSpiBus;
 import io.silverspoon.bulldog.raspberrypi.pwm.RaspiPwm;
 
 public class RaspberryPi extends AbstractBoard {
@@ -149,23 +148,14 @@ public class RaspberryPi extends AbstractBoard {
       return pin;
    }
 
-   private DigitalOutput createDigitalOutput(String name, String port, int portIndex, int gpioAddress) {
-     RaspberryPiPin pin = new RaspberryPiPin(name, gpioAddress, port, portIndex, gpioAddress);
-     return new RaspiDigitalOutput(pin);
-   }
-
    private void createIoPortsRev1() {
       getI2cBuses().add(new RaspberryPiI2cBus(RaspiNames.I2C_0, getPin(RaspiNames.P1_3), getPin(RaspiNames.P1_5)));
-      DigitalOutput cs0 = createDigitalOutput(RaspiNames.P1_24, "P1", 24, 8);
-      DigitalOutput cs1 = createDigitalOutput(RaspiNames.P1_26, "P1", 26, 7);
-      getSpiBuses().add(new LinuxSpiBus(RaspiNames.SPI_0, this));
+      getSpiBuses().add(new RaspberryPiSpiBus(RaspiNames.SPI_0_CS0, this));
    }
 
    private void createIoPortsRev2() {
       getI2cBuses().add(new RaspberryPiI2cBus(RaspiNames.I2C_1, getPin(RaspiNames.P1_3), getPin(RaspiNames.P1_5)));
-      DigitalOutput cs0 = createDigitalOutput(RaspiNames.P1_24, "P1", 24, 8);
-      DigitalOutput cs1 = createDigitalOutput(RaspiNames.P1_26, "P1", 26, 7);
-      getSpiBuses().add(new LinuxSpiBus(RaspiNames.SPI_0, this));
+      getSpiBuses().add(new RaspberryPiSpiBus(RaspiNames.SPI_0_CS0, this));
    }
 
    private int getRevision() {

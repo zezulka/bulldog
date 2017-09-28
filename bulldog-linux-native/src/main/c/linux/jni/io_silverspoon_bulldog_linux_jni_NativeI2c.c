@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
-#include "../bulldog/bulldogI2c.h"
+#include "../bcm/bulldogI2c.h"
 #include "io_silverspoon_bulldog_linux_jni_NativeI2c.h"
 
 /*

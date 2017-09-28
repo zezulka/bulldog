@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <errno.h>
-#include "../bulldog/bulldogGpio.h"
+#include "../bcm/bulldogGpio.h"
 #include "io_silverspoon_bulldog_linux_jni_NativeGpio.h"
 
 /*

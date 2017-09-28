@@ -5,7 +5,6 @@
 #include <string.h>
 #include <sys/ioctl.h>
 #include <stdio.h>
-#include "bulldog.h"
 #include "bulldogSerial.h"
 
 
