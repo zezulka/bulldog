@@ -8,9 +8,9 @@ install:
 script: "
 if [ ${TRAVIS_PULL_REQUEST} = 'false' ];
 then
-    mvn clean deploy --settings target/travis/settings.xml -Dcompiler.exec=arm-linux-gnueabihf-gcc-4.8 -Dlinker.exec=arm-linux-gnueabihf-ld;  
+    mvn clean deploy -Dcompiler.exec=arm-linux-gnueabihf-gcc-4.8 -Dlinker.exec=arm-linux-gnueabihf-ld;  
 else
-    mvn clean verify --settings target/travis/settings.xml -Dcompiler.exec=arm-linux-gnueabihf-gcc-4.8 -Dlinker.exec=arm-linux-gnueabihf-ld;
+    mvn clean verify -Dcompiler.exec=arm-linux-gnueabihf-gcc-4.8 -Dlinker.exec=arm-linux-gnueabihf-ld;
 fi"
 
 
