@@ -18,10 +18,10 @@
   <name>${project.groupId}:${project.artifactId}</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <compiler.exec>gcc</compiler.exec><!-- BEFORE: arm-linux-gnu-gcc  -->
+    <compiler.exec>arm-linux-gnu-gcc</compiler.exec>
     <compiler.includes>-I${env.JAVA_HOME}/include -I${env.JAVA_HOME}/include/linux -I/usr/include</compiler.includes>
     <linker.options>-shared --gc-sections</linker.options>
-    <linker.exec>ld</linker.exec> <!-- BEFORE: arm-linux-gnu-gcc-->
+    <linker.exec>arm-linux-gnu-ld</linker.exec>
   </properties>
   <dependencies>
     <dependency>
