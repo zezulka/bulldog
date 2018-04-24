@@ -89,7 +89,7 @@ public abstract class AbstractDigitalInput extends AbstractPinFeature implements
     @Override
     public void fireInterruptEvent(InterruptEventArgs args) {
         synchronized (interruptListeners) {
-            if (areInterruptsEnabled() == false) {
+            if (!areInterruptsEnabled()) {
                 return;
             }
             for (InterruptListener listener : interruptListeners) {

@@ -34,7 +34,7 @@ public class RaspiDigitalInput extends LinuxDigitalInput {
    protected void setupImpl() {
       RaspberryPiPin pin = getRaspiPin();
       BCM.configureAsInput(pin.getGpioNumber());
-      BCM.configureAsOutput(pin.getGpioNumber());
+      //BCM.configureAsOutput(pin.getGpioNumber());
    }
 
    @Override

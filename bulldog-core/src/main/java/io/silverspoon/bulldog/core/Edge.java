@@ -16,7 +16,13 @@
 package io.silverspoon.bulldog.core;
 
 public enum Edge {
+   None,
    Rising,
    Falling,
-   Both
+   Both;
+
+   public static Edge valueOf(int index) {
+      return Edge.values()[index];
+   }
 }
+

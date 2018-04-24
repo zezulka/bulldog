@@ -20,38 +20,32 @@ import io.silverspoon.bulldog.core.Signal;
 import io.silverspoon.bulldog.core.event.InterruptEventArgs;
 import io.silverspoon.bulldog.core.event.InterruptListener;
 import io.silverspoon.bulldog.core.gpio.base.AbstractDigitalInput;
+import io.silverspoon.bulldog.core.gpio.base.DigitalIOFeature;
 import io.silverspoon.bulldog.core.pin.Pin;
-import io.silverspoon.bulldog.linux.io.LinuxEpollListener;
-import io.silverspoon.bulldog.linux.io.LinuxEpollThread;
-import io.silverspoon.bulldog.linux.jni.NativePollResult;
-import io.silverspoon.bulldog.linux.sysfs.SysFsPin;
+import io.silverspoon.bulldog.linux.io.LinuxInterruptThread;
 
-public class LinuxDigitalInput extends AbstractDigitalInput implements LinuxEpollListener {
+public class LinuxDigitalInput extends AbstractDigitalInput
+        implements InterruptListener {
 
-    private LinuxEpollThread interruptControl;
-    private final SysFsPin sysFsPin;
+    private LinuxInterruptThread interruptControl;
     private Edge lastEdge;
     private volatile long lastInterruptTime;
 
     public LinuxDigitalInput(Pin pin) {
         super(pin);
-        sysFsPin = createSysFsPin(getPin());
-        interruptControl = new LinuxEpollThread(sysFsPin.getValueFilePath().toString());
+        interruptControl = new LinuxInterruptThread(getPin());
         interruptControl.addListener(this);
-    }
-
-    protected SysFsPin createSysFsPin(Pin pin) {
-        return new SysFsPin(pin.getAddress());
     }
 
     @Override
     public Signal read() {
-        return sysFsPin.getValue();
+        return getPin().getFeature(DigitalIOFeature.class).read();
     }
 
     @Override
     public void addInterruptListener(InterruptListener listener) {
         super.addInterruptListener(listener);
+        interruptControl.addListener(listener);
         if (areInterruptsEnabled() && !interruptControl.isRunning()) {
             interruptControl.start();
         }
@@ -60,6 +54,7 @@ public class LinuxDigitalInput extends AbstractDigitalInput implements LinuxEpol
     @Override
     public void removeInterruptListener(InterruptListener listener) {
         super.removeInterruptListener(listener);
+        interruptControl.removeListener(listener);
         if (getInterruptListeners().isEmpty()) {
             interruptControl.stop();
         }
@@ -80,68 +75,35 @@ public class LinuxDigitalInput extends AbstractDigitalInput implements LinuxEpol
 
     @Override
     protected void disableInterruptsImpl() {
-        interruptControl.teardown();
     }
 
     @Override
     protected void setupImpl() {
-        exportPinIfNecessary();
-        interruptControl.setup();
     }
 
     @Override
     protected void teardownImpl() {
         disableInterrupts();
-        unexportPin();
-    }
-
-    protected void exportPinIfNecessary() {
-        sysFsPin.exportIfNecessary();
-        sysFsPin.setDirection("in");
-        sysFsPin.setEdge(getInterruptTrigger().toString().toLowerCase());
-    }
-
-    protected void unexportPin() {
-        sysFsPin.unexport();
     }
 
     @Override
     public void setInterruptTrigger(Edge edge) {
         super.setInterruptTrigger(edge);
-        sysFsPin.setEdge(getInterruptTrigger().toString().toLowerCase());
     }
 
     @Override
-    public void processEpollResults(NativePollResult[] results) {
-        for (NativePollResult result : results) {
-            Edge edge = getEdge(result);
-            if (lastEdge != null && lastEdge.equals(edge)) {
-                continue;
-            }
-
-            long delta = System.currentTimeMillis() - lastInterruptTime;
-            if (delta <= this.getInterruptDebounceMs()) {
-                continue;
-            }
-
-            lastInterruptTime = System.currentTimeMillis();
-            lastEdge = edge;
-            fireInterruptEvent(new InterruptEventArgs(getPin(), edge));
-        }
-    }
-
-    private Edge getEdge(NativePollResult result) {
-        if (result.getData() == null) {
-            return null;
-        }
-        if (result.getDataAsString().charAt(0) == '1') {
-            return Edge.Rising;
+    public void interruptRequest(InterruptEventArgs args) {
+        if (lastEdge != null && lastEdge.equals(args.getEdge())) {
+            return;
         }
 
-        return Edge.Falling;
-    }
+        long delta = System.currentTimeMillis() - lastInterruptTime;
+        if (delta <= this.getInterruptDebounceMs()) {
+            return;
+        }
 
-    public SysFsPin getSysFsPin() {
-        return sysFsPin;
+        lastInterruptTime = System.currentTimeMillis();
+        lastEdge = args.getEdge();
+        //fireInterruptEvent(new InterruptEventArgs(getPin(), args.getEdge()));
     }
 }

@@ -68,6 +68,7 @@
                 <javahClassName>io.silverspoon.bulldog.linux.jni.NativeSpi</javahClassName>
                 <javahClassName>io.silverspoon.bulldog.linux.jni.NativeSerial</javahClassName>
                 <javahClassName>io.silverspoon.bulldog.linux.jni.NativeTools</javahClassName>
+                <javahClassName>io.silverspoon.bulldog.linux.jni.NativeInterrupt</javahClassName>
               </javahClassNames>
               <javahVerbose>true</javahVerbose>
               <javahOutputDirectory>src/main/c/linux/jni</javahOutputDirectory>
