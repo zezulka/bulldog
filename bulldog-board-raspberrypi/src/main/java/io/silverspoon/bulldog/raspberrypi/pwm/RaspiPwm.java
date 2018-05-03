@@ -22,11 +22,15 @@ import io.silverspoon.bulldog.core.util.BulldogUtil;
 import io.silverspoon.bulldog.raspberrypi.RaspberryPiPin;
 import io.silverspoon.bulldog.raspberrypi.bcm.AbstractBCM;
 import io.silverspoon.bulldog.raspberrypi.bcm.BCMFactory;
+import io.silverspoon.bulldog.raspberrypi.bcm.PwmClockDivider;
+
+import java.sql.SQLOutput;
 
 public class RaspiPwm extends AbstractPwm {
 
    private double previousFrequency = 0.0;
-   
+   private int range = 1024;
+
    public static final AbstractBCM BCM = BCMFactory.getBCM();
 
    public RaspiPwm(Pin pin) {
@@ -36,13 +40,13 @@ public class RaspiPwm extends AbstractPwm {
    @Override
    protected void setupImpl() {
       RaspberryPiPin pin = (RaspberryPiPin) getPin();
+      
       BCM.configureAlternateFunction(pin.getGpioNumber(), 5);
-      stopClock();
+      BCM.getPwmMemory().setIntValue(BCM.getPWMRng1(), range);
+      // control reg | BCM2835_PWM0_MS_MODE  | BCM2835_PWM0_ENABLE
+      BCM.getPwmMemory().setIntValue(BCM.getPWMCtl(),
+              BCM.getPwmMemory().getIntValueAt(BCM.getPWMCtl()) | 0x0080 | 0x0001);
       int value = BCM.getPwmMemory().getIntValueAt(BCM.getPWMCtl());
-      value = BitMagic.setBit(value, 5, 0);
-      value = BitMagic.setBit(value, 7, 1);
-      BCM.getPwmMemory().setIntValue(BCM.getPWMCtl(), value);
-      value = BCM.getPwmMemory().getIntValueAt(BCM.getPWMCtl());
    }
 
    @Override
@@ -60,6 +64,27 @@ public class RaspiPwm extends AbstractPwm {
 
       setDutyImpl(duty);
    }
+    /*
+      Alternative way of setting the PWM frequency.
+     */
+   public void setDivider(PwmClockDivider divider) {
+      int div = divider.getDivider();
+      div &= 0xfff;
+
+      int passwd = (0x5A << 24);
+      // Stop the PWM clock
+      BCM.getClockMemory().setIntValue(BCM.getPWMClkCntl(), passwd | 0x01);
+      // Prevents the clock from going slow
+      BulldogUtil.sleepMs(110);
+      // Wait for the clock to be idle
+      while ((BCM.getClockMemory().getIntValueAt(BCM.getPWMClkCntl()) & 0x80) != 0) {
+         BulldogUtil.sleepMs(1);
+      }
+
+      // Set the clock divider and enable the PWM clock
+      BCM.getClockMemory().setIntValue(BCM.getPWMClkDiv(), passwd | (div << 12));
+      BCM.getClockMemory().setIntValue(BCM.getPWMClkCntl(), passwd | 0x11);
+   }
 
    private void setFrequencyImpl(double frequency) {
       if (isEnabled()) {
@@ -68,7 +93,7 @@ public class RaspiPwm extends AbstractPwm {
 
       int divisorRegister = PwmFrequencyCalculator.calculateDivisorRegister(frequency);
       BCM.getClockMemory().setIntValue(BCM.getPWMClkDiv(), divisorRegister);
-      BCM.getPwmMemory().setIntValue(BCM.getPWMRng1(), 0x100000);
+      BCM.getPwmMemory().setIntValue(BCM.getPWMRng1(), range);
       BulldogUtil.sleepMs(1);
       startClock();
 
@@ -78,7 +103,7 @@ public class RaspiPwm extends AbstractPwm {
    }
 
    protected void setDutyImpl(double duty) {
-      int myDuty = (int) (0x100000 * duty);
+      int myDuty = (int) (range * duty);
       BCM.getPwmMemory().setIntValue(BCM.getPWMDat1(), myDuty);
    }
 

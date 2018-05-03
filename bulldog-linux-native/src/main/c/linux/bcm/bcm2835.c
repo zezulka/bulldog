@@ -1316,21 +1316,6 @@ int bcm2835_init(uint32_t peri_base)
     int  ok;
     FILE *fp;
 
-    if (debug) 
-    {
-        bcm2835_peripherals = (uint32_t*)BCM2835_PERI_BASE;
-
-	bcm2835_pads = bcm2835_peripherals + BCM2835_GPIO_PADS/4;
-	bcm2835_clk  = bcm2835_peripherals + BCM2835_CLOCK_BASE/4;
-	bcm2835_gpio = bcm2835_peripherals + BCM2835_GPIO_BASE/4;
-	bcm2835_pwm  = bcm2835_peripherals + BCM2835_GPIO_PWM/4;
-	bcm2835_spi0 = bcm2835_peripherals + BCM2835_SPI0_BASE/4;
-	bcm2835_bsc0 = bcm2835_peripherals + BCM2835_BSC0_BASE/4;
-	bcm2835_bsc1 = bcm2835_peripherals + BCM2835_BSC1_BASE/4;
-	bcm2835_st   = bcm2835_peripherals + BCM2835_ST_BASE/4;
-	return 1; /* Success */
-    }
-
     /* Figure out the base and size of the peripheral address block
     // using the device-tree. Required for RPi2, optional for RPi 1
     */
@@ -1352,8 +1337,7 @@ int bcm2835_init(uint32_t peri_base)
     /* else we are prob on RPi 1 with BCM2835, and use the hardwired defaults */
 
     /* Now get ready to map the peripherals block 
-     * If we are not root, try for the new /dev/gpiomem interface and accept
-     * the fact that we can only access GPIO
+     * If we are not root, try for the /dev/gpiomem interface and only access GPIO
      * else try for the /dev/mem interface and get access to everything
      */
     memfd = -1;
@@ -1419,8 +1403,6 @@ exit:
 /* Close this library and deallocate everything */
 int bcm2835_close(void)
 {
-    if (debug) return 1; /* Success */
-
     unmapmem((void**) &bcm2835_peripherals, bcm2835_peripherals_size);
     bcm2835_peripherals = MAP_FAILED;
     bcm2835_gpio = MAP_FAILED;

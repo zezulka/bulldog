@@ -71,7 +71,7 @@ public abstract class AbstractBCM {
 
    public MemoryMap getPwmMemory() {
       if (pwmMemory == null) {
-         pwmMemory = new MemoryMap("/dev/gpiomem", this.getPWMBase(), 4096, 0);
+         pwmMemory = new MemoryMap("/dev/mem", this.getPWMBase(), 4096, 0);
       }
 
       return pwmMemory;
@@ -79,7 +79,7 @@ public abstract class AbstractBCM {
 
    public MemoryMap getClockMemory() {
       if (clockMemory == null) {
-         clockMemory = new MemoryMap("/dev/gpiomem", this.getClockBase(), 4096, 0);
+         clockMemory = new MemoryMap("/dev/mem", this.getClockBase(), 4096, 0);
       }
 
       return clockMemory;

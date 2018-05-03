@@ -13,6 +13,8 @@ extern "C" {
 #define io_silverspoon_bulldog_linux_jni_NativeTools_OPEN_WRITE_ONLY 1L
 #undef io_silverspoon_bulldog_linux_jni_NativeTools_OPEN_READ_WRITE
 #define io_silverspoon_bulldog_linux_jni_NativeTools_OPEN_READ_WRITE 2L
+#undef io_silverspoon_bulldog_linux_jni_NativeTools_O_SYNC
+#define io_silverspoon_bulldog_linux_jni_NativeTools_O_SYNC 1052672L
 /*
  * Class:     io_silverspoon_bulldog_linux_jni_NativeTools
  * Method:    getJavaDescriptor

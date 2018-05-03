@@ -19,9 +19,10 @@ import java.io.FileDescriptor;
 
 public class NativeTools {
 
-   public static final int OPEN_READ_ONLY = 0x00;
-   public static final int OPEN_WRITE_ONLY = 0x01;
-   public static final int OPEN_READ_WRITE = 0x02;
+   public static final int OPEN_READ_ONLY   = 0x00;
+   public static final int OPEN_WRITE_ONLY  = 0x01;
+   public static final int OPEN_READ_WRITE  = 0x02;
+   public static final int O_SYNC           = 1052672;
 
    public static native FileDescriptor getJavaDescriptor(int fileDescriptor);
 

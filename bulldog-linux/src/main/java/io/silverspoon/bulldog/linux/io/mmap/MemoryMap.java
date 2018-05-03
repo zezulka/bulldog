@@ -29,7 +29,7 @@ public class MemoryMap {
    }
 
    public MemoryMap(String filename, long offset, long size, long address) {
-      fileDescriptor = NativeTools.open(filename, NativeTools.OPEN_READ_WRITE);
+      fileDescriptor = NativeTools.open(filename, NativeTools.OPEN_READ_WRITE | NativeTools.O_SYNC);
       if (fileDescriptor == -1) {
          throw new MMapFailedException("Unable to open file " + filename);
       }
